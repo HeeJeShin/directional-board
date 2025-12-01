@@ -1,6 +1,5 @@
-// 디자인 테마 상수
 export const COLORS = {
-  primary: '#1C4E4E',      // 포인트 색상
+  primary: '#1C4E4E',
   primaryLight: '#2A6B6B',
   primaryDark: '#133838',
   background: '#FFFFFF',
@@ -10,5 +9,13 @@ export const COLORS = {
   border: '#E5E5E5',
   white: '#FFFFFF',
 } as const;
+
+export const CHART_COLORS = [
+  '#1C4E4E',
+  '#4e8888',
+  '#8cb8b8',
+  '#badfdf',
+  '#dfeded',
+] as const;
 
 export type ColorsType = typeof COLORS;

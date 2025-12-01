@@ -1,116 +1,123 @@
-# [Directional] 프론트엔드 채용 과제
+# Directional Board
 
-제출자 : 신희제
+Next.js 16 기반 [Directional] 프론트엔드 채용 과제
 
-## 프로젝트 실행 방법
-
-### 1. 의존성 설치
+## 실행 방법
 ```bash
+# 패키지 설치
 pnpm install
-```
 
-### 2. 환경변수 설정
+# 개발 서버 실행
+pnpm dev
+
+# 빌드
+pnpm build
+```
+## 환경변수 설정
 
 `.env.local` 파일 생성:
 ```
 NEXT_PUBLIC_API_BASE_URL=https://fe-hiring-rest-api.vercel.app
 ```
 
-### 3. 개발 서버 실행
-```bash
-pnpm dev
-```
 
-http://localhost:3000 에서 확인
+## 기술 스택
 
-### 4. 빌드
-```bash
-pnpm build
-pnpm start
-```
+### Core
+- **Next.js 16** (App Router) - 최신 React 서버 컴포넌트 지원
+- **TypeScript** - 타입 안정성
+- **pnpm** - npm 대비 빠른 설치 속도, 디스크 효율성
 
----
+### 상태 관리
+- **Zustand** - Redux 대비 보일러플레이트 최소화, 간결한 API
+- **TanStack Query** - 서버 상태 관리, 캐싱, 무한스크롤 지원
 
-## 사용한 기술 스택
+### HTTP Client
+- **ky** - axios(~13KB) 대비 경량(~3KB), fetch 기반 modern API
 
-| 분류 | 기술 |
-|------|------|
-| **Framework** | Next.js 16 (App Router) |
-| **Language** | TypeScript |
-| **UI** | MUI + Tailwind CSS |
-| **상태관리** | Zustand (persist) |
-| **서버상태** | TanStack Query (React Query) |
-| **HTTP 클라이언트** | ky |
-| **테이블** | TanStack Table |
-| **차트** | ApexCharts |
-| **폼/검증** | react-hook-form + Zod |
-| **무한스크롤** | react-intersection-observer |
-| **패키지 매니저** | pnpm |
+### UI
+- **MUI** - 개인적으로 선호하는 라이브러리는 아니지만, 빠른 개발 속도와 시간 엄수를 위해 채택. 완성도 높은 컴포넌트 제공
+- **Tailwind CSS** - 유틸리티 기반 빠른 스타일링
 
----
+### 폼 & 검증
+- **react-hook-form** - 비제어 컴포넌트 기반 성능 최적화
+- **Zod** - 타입 추론 + 런타임 검증 통합
 
-## 주요 구현 기능 요약
+### 차트
+- **ApexCharts** - 다양한 차트 타입, 인터랙티브 기능 지원
 
-### 1. 게시판 (CRUD)
+## 주요 기능
 
-- 게시글 작성 / 조회 / 수정 / 삭제
-- 커서 기반 무한스크롤 페이지네이션
-- 제목/본문 검색 (AND 매칭)
-- 정렬: `title`, `createdAt` (오름/내림차순)
-- 필터: 카테고리별 (`NOTICE`, `QNA`, `FREE`)
-- 금칙어 필터 (캄보디아, 프놈펜, 불법체류, 텔레그램)
-- 테이블 컬럼 리사이징 및 숨김/보임 기능
+### 1. 인증 시스템
+- JWT 토큰 기반 로그인/로그아웃
+- Zustand persist로 토큰 자동 저장
+- withAuth HOC로 보호된 라우트 처리
+- returnUrl 파라미터로 로그인 후 원래 페이지 복귀
 
-### 2. 데이터 시각화 (8개 차트)
+### 2. 게시판 CRUD
+- 게시글 목록 (무한스크롤, 커서 기반 페이지네이션)
+- 카테고리 필터 (NOTICE, QNA, FREE)
+- 정렬 (최신순, 오래된순, 제목순)
+- 검색 기능
+- 게시글 작성/수정/삭제
+- 금칙어 필터링 (Zod refine)
 
-| 차트 유형 | 데이터 |
-|----------|--------|
-| 바 차트 | 커피 브랜드, 간식 브랜드 |
-| 도넛 차트 | 커피 브랜드, 간식 브랜드 |
-| 스택형 바 차트 | 주간 무드, 주간 운동 |
-| 스택형 면적 차트 | 주간 무드, 주간 운동 |
-| 멀티라인 차트 | 커피 소비/생산성, 간식/사기 |
+### 3. 차트 시각화
 
-**차트 공통 기능:**
-- 범례 표시
-- 범례에서 색상 변경
-- 범례에서 데이터 보이기/숨기기
+#### (1) 바 차트 / 도넛 차트
+- `/mock/weekly-mood-trend` - 주간 무드 분포
+- `/mock/popular-snack-brands` - 인기 간식 브랜드
 
-### 3. 인증
+#### (2) 스택형 바 / 면적 차트
+- `/mock/weekly-mood-trend` - Happy, Tired, Stressed 누적
+- `/mock/weekly-workout-trend` - Running, Cycling, Stretching 누적
+- Y축 백분율(%) 표시
+- X축 주차(week) 표시
 
-- JWT 토큰 기반 인증
-- Zustand persist로 토큰 관리 (새로고침 시 유지)
+#### (3) 멀티라인 차트 (듀얼 Y축)
+- `/mock/coffee-consumption` - 커피 소비 vs 버그/생산성
+- `/mock/snack-impact` - 간식 vs 회의불참/사기
 
----
+**멀티라인 차트 기능:**
+- X축: 커피 섭취량(잔/일), 스낵 수
+- 왼쪽 Y축: 버그 수, 회의불참
+- 오른쪽 Y축: 생산성 점수, 사기
+- 실선: 버그/회의불참 (왼쪽 Y축)
+- 점선: 생산성/사기 (오른쪽 Y축)
+- 마커 구분: 원형(●) - 버그/회의불참, 사각형(■) - 생산성/사기
+- 동일 팀 동일 색상 유지
+- 호버 시 해당 팀 데이터만 툴팁 표시
+
+#### (4) 차트 공통 기능
+- **범례(Legend)** 표시
+- **색상 변경** - ColorPicker로 각 시리즈 색상 커스터마이징
+- **데이터 보이기/숨기기** - 범례 클릭 시 토글
 
 ## 프로젝트 구조
 ```
 src/
-├── app/                    # 페이지
-│   ├── posts/              # 게시판
-│   └── charts/             # 차트
-├── components/             # 아토믹 디자인
-│   ├── atoms/
-│   ├── molecules/
-│   ├── organisms/
-│   └── templates/
-├── hooks/                  # 커스텀 훅 (useAuth, usePosts, useCharts...)
-├── stores/                 # Zustand 스토어
-├── lib/                    # API, 유틸리티
-├── types/                  # 타입 정의
-├── constants/              # 상수 (금칙어 등)
-└── styles/                 # 스타일
+├── app/                    # 페이지 (App Router)
+│   ├── login/
+│   ├── posts/
+│   │   ├── [id]/
+│   │   │   └── edit/
+│   │   └── new/
+│   └── charts/
+├── components/
+│   ├── atoms/              # Button, Input, Select, Tag, TextArea, ChartWrapper
+│   ├── molecules/          # SearchBar, CategoryFilter, SortSelect
+│   ├── organisms/          # PostTable, PostForm, LoginForm, charts/
+│   └── hoc/                # withAuth
+├── hooks/                  # useAuth, usePosts, useCharts, useToast
+├── stores/                 # authStore (Zustand)
+├── lib/                    # api, endpoints, utils, validations
+├── types/                  # auth.types, post.types, chart.types
+├── constants/              # forbidden (금칙어)
+└── styles/                 # theme (COLORS, CHART_COLORS)
 ```
 
----
-
-## 커밋 컨벤션
+## 테스트 계정
 ```
-[Feat]     기능 추가
-[Fix]      버그/오류 해결
-[Refactor] 코드 리팩토링
-[Style]    스타일
-[Chore]    설정, 빌드, 패키지 등
-[Docs]     문서 수정
-[Test]     테스트 추가/수정
+Email: heeheehee.hj@gmail.com
+Password: B2iD4kF6L8
 ```

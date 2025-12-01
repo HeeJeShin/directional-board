@@ -20,7 +20,7 @@ export function withAuth<T extends object>(Component: React.ComponentType<T>) {
                 toast.warning("로그인이 필요합니다");
                 router.replace(`/login?returnUrl=${encodeURIComponent(pathname)}`);
             }
-        }, [_hasHydrated, isLoggedIn, router, toast, pathname]);
+        }, []);
 
         // hydration 전이면 로딩
         if (!_hasHydrated) {

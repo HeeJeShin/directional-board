@@ -1,23 +1,20 @@
-// ========== 바/도넛 차트 ==========
+// ========== 바/도넛 차트 - 커피 브랜드 ==========
 export interface TopCoffeeBrandItemType {
     brand: string;
-    count: number;
+    popularity: number;
 }
 
-export interface TopCoffeeBrandsResponseType {
-    data: TopCoffeeBrandItemType[];
-}
+export type TopCoffeeBrandsResponseType = TopCoffeeBrandItemType[];
 
+// ========== 바/도넛 차트 - 간식 브랜드 ==========
 export interface PopularSnackBrandItemType {
-    brand: string;
-    count: number;
+    name: string;
+    share: number;
 }
 
-export interface PopularSnackBrandsResponseType {
-    data: PopularSnackBrandItemType[];
-}
+export type PopularSnackBrandsResponseType = PopularSnackBrandItemType[];
 
-// ========== 스택형 바/면적 차트 ==========
+// ========== 스택형 바/면적 차트 - 무드 트렌드 ==========
 export interface WeeklyMoodItemType {
     week: string;
     happy: number;
@@ -25,10 +22,9 @@ export interface WeeklyMoodItemType {
     stressed: number;
 }
 
-export interface WeeklyMoodTrendResponseType {
-    data: WeeklyMoodItemType[];
-}
+export type WeeklyMoodTrendResponseType = WeeklyMoodItemType[];
 
+// ========== 스택형 바/면적 차트 - 운동 트렌드 ==========
 export interface WeeklyWorkoutItemType {
     week: string;
     running: number;
@@ -36,37 +32,36 @@ export interface WeeklyWorkoutItemType {
     stretching: number;
 }
 
-export interface WeeklyWorkoutTrendResponseType {
-    data: WeeklyWorkoutItemType[];
-}
+export type WeeklyWorkoutTrendResponseType = WeeklyWorkoutItemType[];
 
-// ========== 멀티라인 차트 ==========
-export interface CoffeeDataPointType {
-    cupsPerDay: number;
+// ========== 멀티라인 차트 - 커피 소비 ==========
+export interface CoffeeMetricType {
+    cups: number;
     bugs: number;
     productivity: number;
 }
 
 export interface CoffeeTeamType {
-    team: string;
-    data: CoffeeDataPointType[];
+    name: string;
+    metrics: CoffeeMetricType[];
 }
 
 export interface CoffeeConsumptionResponseType {
     teams: CoffeeTeamType[];
 }
 
-export interface SnackImpactDataPointType {
-    snackCount: number;
-    meetingMissed: number;
+// ========== 멀티라인 차트 - 간식 영향 ==========
+export interface SnackMetricType {
+    snacks: number;
+    meetingsMissed: number;
     morale: number;
 }
 
-export interface SnackImpactDepartmentType {
-    department: string;
-    data: SnackImpactDataPointType[];
+export interface SnackDepartmentType {
+    name: string;
+    metrics: SnackMetricType[];
 }
 
 export interface SnackImpactResponseType {
-    departments: SnackImpactDepartmentType[];
+    departments: SnackDepartmentType[];
 }

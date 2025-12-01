@@ -59,73 +59,73 @@ function PostDetailPage({ params }: PostDetailPageProps) {
     if (error || !post) {
         return (
             <Box className="p-8 max-w-3xl mx-auto text-center">
-        <Typography color="error">게시글을 찾을 수 없습니다</Typography>
-        <Button variant="outlined" onClick={() => router.push("/posts")} className="mt-4">
-          목록으로
-        </Button>
-      </Box>
+                <Typography color="error">게시글을 찾을 수 없습니다</Typography>
+                <Button variant="outlined" onClick={() => router.push("/posts")} className="mt-4">
+                  목록으로
+                </Button>
+            </Box>
         );
     }
 
     return (
         <Box className="p-8 max-w-3xl mx-auto">
-      <Paper className="p-6">
-        {/* 헤더 */}
-          <Box className="flex items-center gap-2 mb-4">
-          <Tag category={post.category} />
-          <Typography variant="caption" className="text-text-secondary">
-            {formatDate(post.createdAt)}
-          </Typography>
+          <Paper className="p-6">
+            {/* 헤더 */}
+              <Box className="flex items-center gap-2 mb-4">
+              <Tag category={post.category} />
+              <Typography variant="caption" className="text-text-secondary">
+                {formatDate(post.createdAt)}
+              </Typography>
+            </Box>
+
+              {/* 제목 */}
+              <Typography variant="h5" className="font-bold mb-4">
+              {post.title}
+            </Typography>
+
+            <Divider className="my-4" />
+
+              {/* 본문 */}
+              <Typography className="whitespace-pre-wrap min-h-[200px]">
+                  {post.body}
+              </Typography>
+
+              {/* 태그 */}
+              {post.tags && post.tags.length > 0 && (
+                  <Box className="flex gap-2 mt-6 flex-wrap">
+                {post.tags.map((tag) => (
+                    <Chip key={tag} label={`#${tag}`} size="small" variant="outlined" />
+                ))}
+              </Box>
+              )}
+
+              <Divider className="my-6" />
+
+              {/* 버튼 */}
+              <Box className="flex justify-between">
+              <Button variant="outlined" onClick={() => router.push("/posts")}>
+                목록
+              </Button>
+              <Box className="flex gap-2">
+                <Button variant="outlined" onClick={handleEdit}>
+                  수정
+                </Button>
+                <Button
+                    variant="contained"
+                    color="error"
+                    onClick={handleDelete}
+                    loading={isDeleting}
+                    sx={{
+                        backgroundColor: "#dc2626",
+                        "&:hover": { backgroundColor: "#b91c1c" },
+                    }}
+                >
+                  삭제
+                </Button>
+              </Box>
+            </Box>
+          </Paper>
         </Box>
-
-          {/* 제목 */}
-          <Typography variant="h5" className="font-bold mb-4">
-          {post.title}
-        </Typography>
-
-        <Divider className="my-4" />
-
-          {/* 본문 */}
-          <Typography className="whitespace-pre-wrap min-h-[200px]">
-              {post.body}
-          </Typography>
-
-          {/* 태그 */}
-          {post.tags && post.tags.length > 0 && (
-              <Box className="flex gap-2 mt-6 flex-wrap">
-            {post.tags.map((tag) => (
-                <Chip key={tag} label={`#${tag}`} size="small" variant="outlined" />
-            ))}
-          </Box>
-          )}
-
-          <Divider className="my-6" />
-
-          {/* 버튼 */}
-          <Box className="flex justify-between">
-          <Button variant="outlined" onClick={() => router.push("/posts")}>
-            목록
-          </Button>
-          <Box className="flex gap-2">
-            <Button variant="outlined" onClick={handleEdit}>
-              수정
-            </Button>
-            <Button
-                variant="contained"
-                color="error"
-                onClick={handleDelete}
-                loading={isDeleting}
-                sx={{
-                    backgroundColor: "#dc2626",
-                    "&:hover": { backgroundColor: "#b91c1c" },
-                }}
-            >
-              삭제
-            </Button>
-          </Box>
-        </Box>
-      </Paper>
-    </Box>
     );
 }
 

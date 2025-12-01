@@ -8,9 +8,9 @@ const categoryColors: Record<CategoryType, ChipProps["color"]> = {
 };
 
 const categoryLabels: Record<CategoryType, string> = {
-    NOTICE: "공지",
+    NOTICE: "NOTICE",
     QNA: "Q&A",
-    FREE: "자유",
+    FREE: "FREE",
 };
 
 interface TagProps {
