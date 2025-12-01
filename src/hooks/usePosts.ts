@@ -11,16 +11,28 @@ import type {
 } from "@/types/post.types";
 import {toSearchParams} from "@/lib/utils";
 
-// 게시글 목록 (무한스크롤)
+// 내 개시글보기 (무한스크롤)
 export const usePosts = (params?: Omit<PostListParamsType, "nextCursor" | "prevCursor">) => {
     return useInfiniteQuery({
         queryKey: ["posts", params],
-        queryFn: ({ pageParam }) =>
-            api
-                .get(ENDPOINTS.POSTS, {
-                    searchParams: toSearchParams({ ...params, nextCursor: pageParam }),
-                })
-                .json<PostListResponseType>(),
+        queryFn: ({ pageParam }) => {
+            const searchParams = new URLSearchParams();
+
+            // limit 기본값 10
+            searchParams.set("limit", String(params?.limit ?? 10));
+
+            if (params?.sort) searchParams.set("sort", params.sort);
+            if (params?.order) searchParams.set("order", params.order);
+            if (params?.category) searchParams.set("category", params.category);
+            if (params?.from) searchParams.set("from", params.from);
+            if (params?.to) searchParams.set("to", params.to);
+            if (params?.search) searchParams.set("search", params.search);
+            if (pageParam) searchParams.set("nextCursor", pageParam);
+
+            return api
+                .get(ENDPOINTS.POSTS, { searchParams })
+                .json<PostListResponseType>();
+        },
         initialPageParam: "",
         getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
     });

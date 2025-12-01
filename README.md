@@ -94,7 +94,7 @@ src/
 │   ├── molecules/
 │   ├── organisms/
 │   └── templates/
-├── hooks/                  # 커스텀 훅 (useAuth, usePosts, useCharts)
+├── hooks/                  # 커스텀 훅 (useAuth, usePosts, useCharts...)
 ├── stores/                 # Zustand 스토어
 ├── lib/                    # API, 유틸리티
 ├── types/                  # 타입 정의
@@ -109,7 +109,7 @@ src/
 [Feat]     기능 추가
 [Fix]      버그/오류 해결
 [Refactor] 코드 리팩토링
-[Style]    포맷팅, 세미콜론 등
+[Style]    스타일
 [Chore]    설정, 빌드, 패키지 등
 [Docs]     문서 수정
 [Test]     테스트 추가/수정

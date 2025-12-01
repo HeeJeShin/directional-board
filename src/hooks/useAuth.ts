@@ -2,7 +2,8 @@ import { useMutation } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { ENDPOINTS } from "@/lib/endpoints";
 import { useAuthStore } from "@/stores/authStore";
-import {LoginRequestType, LoginResponseType} from "@/types/api.types";
+import {LoginRequestType, LoginResponseType} from "@/types/auth.types";
+
 
 
 export const useLogin = () => {
