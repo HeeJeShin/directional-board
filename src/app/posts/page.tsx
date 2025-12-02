@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Box, Typography } from "@mui/material";
 import { usePosts } from "@/hooks/usePosts";
 import { CategoryType, SortFieldType, SortOrderType, PostType } from "@/types/post.types";
 import { COLORS } from "@/styles/theme";
@@ -9,9 +10,8 @@ import { PostTable } from "@/components/organisms/post/PostTable";
 import { withAuth } from "@/components/hoc/withAuth";
 import { Button } from "@/components/atoms/Button";
 import { Select } from "@/components/atoms/Select";
-import {SearchBar} from "@/components/atoms/SearchBar";
-import {CategoryTabs} from "@/components/molecules/CategoryTabs";
-
+import { SearchBar } from "@/components/atoms/SearchBar";
+import { CategoryTabs } from "@/components/molecules/CategoryTabs";
 
 const categories = [
     { value: "ALL", label: "ALL" },
@@ -64,20 +64,30 @@ const PostsPage = () => {
     };
 
     return (
-        <div className="p-8 max-w-5xl mx-auto">
-            {/* 상단: 제목 + 검색바 */}
-            <div className="flex justify-between items-center mb-6">
-                <h1
-                    className="text-2xl font-bold"
-                    style={{ color: COLORS.text }}
+        <Box sx={{ p: { xs: 2, sm: 4, md: 8 }, maxWidth: "896px", mx: "auto" }}>
+            {/* 상단: 제목 + 검색바 - 모바일에서 세로 배치 */}
+            <Box
+                sx={{
+                    display: "flex",
+                    flexDirection: { xs: "column", sm: "row" },
+                    justifyContent: "space-between",
+                    alignItems: { xs: "stretch", sm: "center" },
+                    gap: { xs: 2, sm: 0 },
+                    mb: 3,
+                }}
+            >
+                <Typography
+                    variant="h5"
+                    fontWeight="bold"
+                    sx={{ color: COLORS.text }}
                 >
                     게시판
-                </h1>
+                </Typography>
                 <SearchBar
                     onSearch={setSearch}
                     placeholder="검색해보세요."
                 />
-            </div>
+            </Box>
 
             {/* 카테고리 탭 */}
             <CategoryTabs
@@ -87,7 +97,14 @@ const PostsPage = () => {
             />
 
             {/* 컨트롤 바: 글쓰기 + 정렬 */}
-            <div className="flex justify-between items-center my-4">
+            <Box
+                sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    my: 2,
+                }}
+            >
                 <Button
                     variant="outlined"
                     size="md"
@@ -117,7 +134,7 @@ const PostsPage = () => {
                     value={`${sortField}-${sortOrder}`}
                     onChange={handleSortChange}
                 />
-            </div>
+            </Box>
 
             {/* 테이블 */}
             <PostTable
@@ -128,7 +145,7 @@ const PostsPage = () => {
                 isFetchingNextPage={isFetchingNextPage}
                 onRowClick={handleRowClick}
             />
-        </div>
+        </Box>
     );
 };
 
