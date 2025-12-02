@@ -42,8 +42,8 @@ export interface CoffeeMetricType {
 }
 
 export interface CoffeeTeamType {
-    name: string;
-    metrics: CoffeeMetricType[];
+    series : CoffeeMetricType[]
+    team : string;
 }
 
 export interface CoffeeConsumptionResponseType {

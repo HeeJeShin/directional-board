@@ -6,14 +6,17 @@ import { ApexChart } from "@/components/atoms/ChartWrapper";
 import { ApexOptions } from "apexcharts";
 import { CHART_COLORS } from "@/styles/theme";
 import { ChartColorPicker } from "./ChartColorPicker";
+import { useMobile } from "@/hooks/useMobile";
+import { Typography } from "@/components/atoms/Typography";
 
-interface DonutChartProps {
+interface DonutChartPropsType {
     title: string;
     labels: string[];
     data: number[];
 }
 
-export function DonutChart({ title, labels, data }: DonutChartProps) {
+export const DonutChart = ({ title, labels, data }: DonutChartPropsType) => {
+    const isMobile = useMobile();
     const [colors, setColors] = useState<string[]>([...CHART_COLORS].slice(0, data.length));
 
     const options: ApexOptions = {
@@ -21,7 +24,7 @@ export function DonutChart({ title, labels, data }: DonutChartProps) {
             type: "donut",
         },
         title: {
-            text: title,
+            text: isMobile ? "" : title,
             align: "center",
         },
         labels,
@@ -29,8 +32,16 @@ export function DonutChart({ title, labels, data }: DonutChartProps) {
         legend: {
             show: true,
             position: "bottom",
+            height: isMobile ? 50 : undefined,
             onItemClick: {
                 toggleDataSeries: true,
+            },
+        },
+        plotOptions: {
+            pie: {
+                donut: {
+                    size: isMobile ? "60%" : "65%",
+                },
             },
         },
         dataLabels: {
@@ -40,9 +51,22 @@ export function DonutChart({ title, labels, data }: DonutChartProps) {
     };
 
     return (
-        <Box>
-      <ChartColorPicker colors={colors} onChange={setColors} />
-      <ApexChart type="donut" options={options} series={data} height={350} />
-    </Box>
+        <Box sx={{ minHeight: isMobile ? "auto" : 403 }}>
+            {isMobile && (
+                <Typography
+                    variant="h6"
+                    className="text-center mb-2"
+                >
+                    {title}
+                </Typography>
+            )}
+            <ChartColorPicker colors={colors} onChange={setColors} />
+            <ApexChart
+                type="donut"
+                options={options}
+                series={data}
+                height={isMobile ? 380 : 350}
+            />
+        </Box>
     );
-}
+};

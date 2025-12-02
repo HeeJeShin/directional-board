@@ -6,14 +6,17 @@ import { ApexChart } from "@/components/atoms/ChartWrapper";
 import { ApexOptions } from "apexcharts";
 import { CHART_COLORS } from "@/styles/theme";
 import { ChartColorPicker } from "./ChartColorPicker";
+import { useMobile } from "@/hooks/useMobile";
+import { Typography } from "@/components/atoms/Typography";
 
-interface AreaChartProps {
+interface AreaChartPropsType {
     title: string;
     categories: string[];
     series: { name: string; data: number[] }[];
 }
 
-export function AreaChart({ title, categories, series }: AreaChartProps) {
+export const AreaChart = ({ title, categories, series }: AreaChartPropsType) => {
+    const isMobile = useMobile();
     const [colors, setColors] = useState<string[]>([...CHART_COLORS].slice(0, series.length));
 
     const options: ApexOptions = {
@@ -24,7 +27,7 @@ export function AreaChart({ title, categories, series }: AreaChartProps) {
             toolbar: { show: true },
         },
         title: {
-            text: title,
+            text: isMobile ? "" : title,
             align: "center",
         },
         xaxis: {
@@ -65,8 +68,16 @@ export function AreaChart({ title, categories, series }: AreaChartProps) {
 
     return (
         <Box>
-          <ChartColorPicker colors={colors} onChange={setColors} />
-          <ApexChart type="area" options={options} series={series} height={350} />
+            {isMobile && (
+                <Typography
+                    variant="h6"
+                    className="text-center mb-2"
+                >
+                    {title}
+                </Typography>
+            )}
+            <ChartColorPicker colors={colors} onChange={setColors} />
+            <ApexChart type="area" options={options} series={series} height={350} />
         </Box>
     );
-}
+};

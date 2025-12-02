@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { ApexChart } from "@/components/atoms/ChartWrapper";
 import { ApexOptions } from "apexcharts";
 import { CHART_COLORS } from "@/styles/theme";
 import { ChartColorPicker } from "./ChartColorPicker";
 import { useMobile } from "@/hooks/useMobile";
+import { Typography } from "@/components/atoms/Typography";
 
 interface TeamDataType {
     name: string;
@@ -39,7 +40,6 @@ export const DualAxisLineChart = ({
         [...CHART_COLORS].slice(0, teams.length)
     );
 
-    // 시리즈 생성: 각 팀마다 2개 라인
     const series = teams.flatMap((team) => [
         {
             name: `${team.name} - ${primaryLabel}`,
@@ -63,7 +63,7 @@ export const DualAxisLineChart = ({
             zoom: { enabled: true },
         },
         title: {
-            text: isMobile ? "" : title, // 모바일에서는 외부 Typography로 표시
+            text: isMobile ? "" : title,
             align: "center",
         },
         colors: seriesColors,
@@ -181,13 +181,10 @@ export const DualAxisLineChart = ({
                 },
             }}
         >
-            {/* 모바일: 제목을 차트 외부 상단에 배치 */}
             {isMobile && (
                 <Typography
-                    variant="subtitle1"
-                    fontWeight={600}
-                    textAlign="center"
-                    mb={1}
+                    variant="h6"
+                    className="text-center mb-2"
                 >
                     {title}
                 </Typography>

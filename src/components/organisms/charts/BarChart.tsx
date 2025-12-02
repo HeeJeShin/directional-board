@@ -6,14 +6,17 @@ import { ApexChart } from "@/components/atoms/ChartWrapper";
 import { ApexOptions } from "apexcharts";
 import { CHART_COLORS } from "@/styles/theme";
 import { ChartColorPicker } from "./ChartColorPicker";
+import { useMobile } from "@/hooks/useMobile";
+import { Typography } from "@/components/atoms/Typography";
 
-interface BarChartProps {
+interface BarChartPropsType {
     title: string;
     categories: string[];
     data: number[];
 }
 
-export function BarChart({ title, categories, data }: BarChartProps) {
+export const BarChart = ({ title, categories, data }: BarChartPropsType) => {
+    const isMobile = useMobile();
     const [colors, setColors] = useState<string[]>([...CHART_COLORS].slice(0, data.length));
 
     const options: ApexOptions = {
@@ -22,7 +25,7 @@ export function BarChart({ title, categories, data }: BarChartProps) {
             toolbar: { show: true },
         },
         title: {
-            text: title,
+            text: isMobile ? "" : title,
             align: "center",
         },
         xaxis: {
@@ -57,8 +60,16 @@ export function BarChart({ title, categories, data }: BarChartProps) {
 
     return (
         <Box>
-      <ChartColorPicker colors={colors} onChange={setColors} />
-      <ApexChart type="bar" options={options} series={series} height={350} />
-    </Box>
+            {isMobile && (
+                <Typography
+                    variant="h6"
+                    className="text-center mb-2"
+                >
+                    {title}
+                </Typography>
+            )}
+            <ChartColorPicker colors={colors} onChange={setColors} />
+            <ApexChart type="bar" options={options} series={series} height={350} />
+        </Box>
     );
-}
+};
