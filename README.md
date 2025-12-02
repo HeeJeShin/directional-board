@@ -1,6 +1,12 @@
-# Directional Board
+# [Directional] 프론트엔드 채용 과제
 
-Next.js 16 기반 게시판 + 차트 대시보드 프로젝트입니다.
+제출자 : 신희제
+
+## 🚀 Live Demo
+
+**Deployed on Vercel** → [https://directional-board.vercel.app/](https://directional-board.vercel.app/)
+
+---
 
 ## 실행 방법
 

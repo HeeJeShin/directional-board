@@ -292,7 +292,7 @@ export const PostTable = ({
                         {table.getHeaderGroups().map((headerGroup) => (
                             <tr
                                 key={headerGroup.id}
-                                style={{ borderBottom: `2px solid ${COLORS.primaryLight}` }}
+                                style={{ borderBottom: `2px solid ${COLORS.primaryBg}` }}
                             >
                                 {headerGroup.headers.map((header) => (
                                     <th
