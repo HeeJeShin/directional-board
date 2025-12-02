@@ -62,7 +62,6 @@ export default function ChartsPage() {
         <Box className="p-8">
             <Typography variant="h5" className="font-bold mb-6">
             </Typography>
-
             <Grid container spacing={3}>
                 {/* (1) 바/도넛 차트 - 무드 트렌드 */}
                 <Grid size={{ xs: 12, md: 6 }}>

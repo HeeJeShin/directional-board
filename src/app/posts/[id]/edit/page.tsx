@@ -1,51 +1,63 @@
 "use client";
 
 import { use } from "react";
-import { Box, Typography, Paper, CircularProgress } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { withAuth } from "@/components/hoc/withAuth";
-import { PostForm } from "@/components/organisms/PostForm";
+import { PostForm } from "@/components/organisms/post/PostForm";
 import { Button } from "@/components/atoms/Button";
 import { usePost } from "@/hooks/usePosts";
+import { COLORS } from "@/styles/theme";
 
 interface EditPostPageProps {
     params: Promise<{ id: string }>;
 }
 
-function EditPostPage({ params }: EditPostPageProps) {
+const EditPostPage = ({ params }: EditPostPageProps) => {
     const { id } = use(params);
     const router = useRouter();
     const { data: post, isLoading, error } = usePost(id);
 
     if (isLoading) {
         return (
-            <Box className="min-h-screen flex items-center justify-center">
-        <CircularProgress sx={{ color: "#1C4E4E" }} />
-      </Box>
+            <div className="min-h-screen flex items-center justify-center">
+                <div
+                    className="animate-spin rounded-full h-8 w-8 border-b-2"
+                    style={{ borderColor: COLORS.primary }}
+                />
+            </div>
         );
     }
 
     if (error || !post) {
         return (
-            <Box className="p-8 max-w-3xl mx-auto text-center">
-                <Typography color="error">게시글을 찾을 수 없습니다</Typography>
-                <Button variant="outlined" onClick={() => router.push("/posts")} className="mt-4">
-                  목록으로
+            <div className="p-8 max-w-3xl mx-auto text-center">
+                <p className="text-red-500 mb-4">게시글을 찾을 수 없습니다</p>
+                <Button variant="outlined" onClick={() => router.push("/posts")}>
+                    목록으로
                 </Button>
-           </Box>
+            </div>
         );
     }
 
     return (
-        <Box className="p-8 max-w-3xl mx-auto">
-          <Typography variant="h5" className="font-bold mb-6">
-            게시글 수정
-          </Typography>
-          <Paper className="p-6">
-            <PostForm mode="edit" initialData={post} />
-          </Paper>
-        </Box>
+        <div className="p-8 max-w-3xl mx-auto">
+            <h1
+                className="text-2xl font-bold mb-8"
+                style={{ color: COLORS.text }}
+            >
+                게시글 수정
+            </h1>
+            <div
+                className="rounded-xl border p-8"
+                style={{
+                    backgroundColor: COLORS.background,
+                    borderColor: COLORS.borderLight,
+                }}
+            >
+                <PostForm mode="edit" initialData={post} />
+            </div>
+        </div>
     );
-}
+};
 
 export default withAuth(EditPostPage);

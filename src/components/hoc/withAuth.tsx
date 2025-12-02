@@ -18,7 +18,7 @@ export function withAuth<T extends object>(Component: React.ComponentType<T>) {
             if (_hasHydrated && !isLoggedIn() && !hasRedirected.current) {
                 hasRedirected.current = true;
                 toast.warning("로그인이 필요합니다");
-                router.replace(`/login?returnUrl=${encodeURIComponent(pathname)}`);
+                router.replace(`/?returnUrl=${encodeURIComponent(pathname)}`);
             }
         }, []);
 

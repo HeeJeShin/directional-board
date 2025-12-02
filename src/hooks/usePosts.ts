@@ -7,7 +7,7 @@ import type {
     PostUpdateRequestType,
     PostListParamsType,
     PostListResponseType,
-    DeleteResponseType,
+    DeleteResponseType, MockPostListResponseType,
 } from "@/types/post.types";
 import {toSearchParams} from "@/lib/utils";
 
@@ -99,12 +99,16 @@ export const useDeleteAllPosts = () => {
 };
 
 // Mock 게시글
-export const useMockPosts = (count?: number) => {
+export const useMockPosts = (count: number = 300) => {
     return useQuery({
         queryKey: ["mockPosts", count],
-        queryFn: () =>
-            api
-                .get(ENDPOINTS.MOCK_POSTS, { searchParams: count ? { count } : {} })
-                .json<PostType[]>(),
+        queryFn: () => {
+            const searchParams = new URLSearchParams();
+            searchParams.set("count", String(Math.min(count, 500)));
+
+            return api
+                .get(ENDPOINTS.MOCK_POSTS, { searchParams })
+                .json<MockPostListResponseType>();
+        },
     });
 };

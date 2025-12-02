@@ -2,18 +2,31 @@
 
 import { use } from "react";
 import { useRouter } from "next/navigation";
-import { Box, Typography, Paper, Divider, CircularProgress, Chip } from "@mui/material";
 import { withAuth } from "@/components/hoc/withAuth";
 import { Button } from "@/components/atoms/Button";
-import { Tag } from "@/components/atoms/Tag";
 import { usePost, useDeletePost } from "@/hooks/usePosts";
 import { useToast } from "@/hooks/useToast";
+import { COLORS } from "@/styles/theme";
+import { CategoryType } from "@/types/post.types";
+
+// 카테고리 태그
+const categoryStyles: Record<CategoryType, { bg: string; text: string; border: string }> = {
+    NOTICE: { bg: "#FEE2E2", text: "#B91C1C", border: "#FECACA" },
+    QNA: { bg: "#DBEAFE", text: "#1D4ED8", border: "#BFDBFE" },
+    FREE: { bg: "#D1FAE5", text: "#047857", border: "#A7F3D0" },
+};
+
+const categoryLabels: Record<CategoryType, string> = {
+    NOTICE: "NOTICE",
+    QNA: "Q&A",
+    FREE: "FREE",
+};
 
 interface PostDetailPageProps {
     params: Promise<{ id: string }>;
 }
 
-function PostDetailPage({ params }: PostDetailPageProps) {
+const PostDetailPage = ({ params }: PostDetailPageProps) => {
     const { id } = use(params);
     const router = useRouter();
     const toast = useToast();
@@ -48,85 +61,132 @@ function PostDetailPage({ params }: PostDetailPageProps) {
         });
     };
 
+    // 로딩
     if (isLoading) {
         return (
-            <Box className="min-h-screen flex items-center justify-center">
-                <CircularProgress sx={{ color: "#1C4E4E" }} />
-          </Box>
+            <div className="min-h-screen flex items-center justify-center">
+                <div
+                    className="animate-spin rounded-full h-8 w-8 border-b-2"
+                    style={{ borderColor: COLORS.primary }}
+                />
+            </div>
         );
     }
 
+    // 에러
     if (error || !post) {
         return (
-            <Box className="p-8 max-w-3xl mx-auto text-center">
-                <Typography color="error">게시글을 찾을 수 없습니다</Typography>
-                <Button variant="outlined" onClick={() => router.push("/posts")} className="mt-4">
-                  목록으로
+            <div className="p-8 max-w-3xl mx-auto text-center">
+                <p className="text-red-500 mb-4">게시글을 찾을 수 없습니다</p>
+                <Button variant="outlined" onClick={() => router.push("/posts")}>
+                    목록으로
                 </Button>
-            </Box>
+            </div>
         );
     }
 
+    const catStyle = categoryStyles[post.category];
+
     return (
-        <Box className="p-8 max-w-3xl mx-auto">
-          <Paper className="p-6">
-            {/* 헤더 */}
-              <Box className="flex items-center gap-2 mb-4">
-              <Tag category={post.category} />
-              <Typography variant="caption" className="text-text-secondary">
-                {formatDate(post.createdAt)}
-              </Typography>
-            </Box>
+        <div className="p-8 max-w-3xl mx-auto">
+            <div
+                className="rounded-xl border p-8"
+                style={{
+                    backgroundColor: COLORS.background,
+                    borderColor: COLORS.borderLight,
+                }}
+            >
+                {/* 헤더: 카테고리 + 날짜 */}
+                <div className="flex items-center gap-3 mb-6">
+                    <span
+                        className="px-3 py-1 rounded-md text-sm font-medium border"
+                        style={{
+                            backgroundColor: catStyle.bg,
+                            color: catStyle.text,
+                            borderColor: catStyle.border,
+                        }}
+                    >
+                        {categoryLabels[post.category]}
+                    </span>
+                    <span
+                        className="text-sm"
+                        style={{ color: COLORS.textSecondary }}
+                    >
+                        {formatDate(post.createdAt)}
+                    </span>
+                </div>
 
-              {/* 제목 */}
-              <Typography variant="h5" className="font-bold mb-4">
-              {post.title}
-            </Typography>
-
-            <Divider className="my-4" />
-
-              {/* 본문 */}
-              <Typography className="whitespace-pre-wrap min-h-[200px]">
-                  {post.body}
-              </Typography>
-
-              {/* 태그 */}
-              {post.tags && post.tags.length > 0 && (
-                  <Box className="flex gap-2 mt-6 flex-wrap">
-                {post.tags.map((tag) => (
-                    <Chip key={tag} label={`#${tag}`} size="small" variant="outlined" />
-                ))}
-              </Box>
-              )}
-
-              <Divider className="my-6" />
-
-              {/* 버튼 */}
-              <Box className="flex justify-between">
-              <Button variant="outlined" onClick={() => router.push("/posts")}>
-                목록
-              </Button>
-              <Box className="flex gap-2">
-                <Button variant="outlined" onClick={handleEdit}>
-                  수정
-                </Button>
-                <Button
-                    variant="contained"
-                    color="error"
-                    onClick={handleDelete}
-                    loading={isDeleting}
-                    sx={{
-                        backgroundColor: "#dc2626",
-                        "&:hover": { backgroundColor: "#b91c1c" },
-                    }}
+                {/* 제목 */}
+                <h1
+                    className="text-2xl font-bold mb-6"
+                    style={{ color: COLORS.text }}
                 >
-                  삭제
-                </Button>
-              </Box>
-            </Box>
-          </Paper>
-        </Box>
+                    {post.title}
+                </h1>
+
+                {/* 구분선 */}
+                <div
+                    className="h-px mb-6"
+                    style={{ backgroundColor: COLORS.borderLight }}
+                />
+
+                {/* 본문 */}
+                <div
+                    className="whitespace-pre-wrap min-h-[200px] leading-relaxed mb-8"
+                    style={{ color: COLORS.text }}
+                >
+                    {post.body}
+                </div>
+
+                {/* 태그 */}
+                {post.tags && post.tags.length > 0 && (
+                    <div className="flex gap-2 flex-wrap mb-8">
+                        {post.tags.map((tag) => (
+                            <span
+                                key={tag}
+                                className="px-3 py-1 rounded-full text-sm font-medium border"
+                                style={{
+                                    backgroundColor: COLORS.primaryBgLight,
+                                    color: COLORS.primary,
+                                    borderColor: COLORS.borderLight,
+                                }}
+                            >
+                                #{tag}
+                            </span>
+                        ))}
+                    </div>
+                )}
+
+                {/* 구분선 */}
+                <div
+                    className="h-px mb-6"
+                    style={{ backgroundColor: COLORS.borderLight }}
+                />
+
+                {/* 버튼 */}
+                <div className="flex justify-between items-center">
+                    <Button variant="outlined" onClick={() => router.push("/posts")}>
+                        목록
+                    </Button>
+                    <div className="flex gap-3">
+                        <Button variant="outlined" onClick={handleEdit}>
+                            수정
+                        </Button>
+                        <Button
+                            variant="contained"
+                            onClick={handleDelete}
+                            loading={isDeleting}
+                            style={{
+                                backgroundColor: "#dc2626",
+                            }}
+                        >
+                            삭제
+                        </Button>
+                    </div>
+                </div>
+            </div>
+        </div>
     );
-}
+};
 
 export default withAuth(PostDetailPage);

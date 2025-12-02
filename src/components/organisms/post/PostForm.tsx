@@ -2,7 +2,6 @@
 
 import { useForm, Controller, FieldErrors } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Box } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/atoms/Input";
 import { TextArea } from "@/components/atoms/TextArea";
@@ -12,10 +11,11 @@ import { postSchema, PostFormType } from "@/lib/validations/post";
 import { useCreatePost, useUpdatePost } from "@/hooks/usePosts";
 import { useToast } from "@/hooks/useToast";
 import { PostType } from "@/types/post.types";
+import { containsForbiddenWord, FORBIDDEN_WORDS } from "@/constants/forbidden";
 
 const categoryOptions = [
     { value: "NOTICE", label: "NOTICE" },
-    { value: "QNA", label: "QNA" },
+    { value: "QNA", label: "Q&A" },
     { value: "FREE", label: "FREE" },
 ];
 
@@ -24,7 +24,7 @@ interface PostFormProps {
     initialData?: PostType;
 }
 
-export function PostForm({ mode = "create", initialData }: PostFormProps) {
+export const PostForm = ({ mode = "create", initialData }: PostFormProps) => {
     const router = useRouter();
     const toast = useToast();
     const { mutate: createPost, isPending: isCreating } = useCreatePost();
@@ -48,6 +48,12 @@ export function PostForm({ mode = "create", initialData }: PostFormProps) {
     });
 
     const onSubmit = (data: PostFormType) => {
+        // 금칙어 체크
+        if (containsForbiddenWord(data.title) || containsForbiddenWord(data.body)) {
+            toast.error(`금칙어가 포함되어 있습니다: ${FORBIDDEN_WORDS.join(", ")}`);
+            return;
+        }
+
         const payload = {
             title: data.title,
             body: data.body,
@@ -95,54 +101,54 @@ export function PostForm({ mode = "create", initialData }: PostFormProps) {
     };
 
     return (
-        <Box
-            component="form"
+        <form
             onSubmit={handleSubmit(onSubmit, onError)}
             className="flex flex-col gap-4"
         >
-      <Controller
-          name="category"
-          control={control}
-          render={({ field }) => (
-              <Select
-                  label="카테고리"
-                  options={categoryOptions}
-                  error={!!errors.category}
-                  {...field}
-              />
-          )}
-      />
+            <Controller
+                name="category"
+                control={control}
+                render={({ field }) => (
+                    <Select
+                        label="카테고리"
+                        options={categoryOptions}
+                        error={!!errors.category}
+                        placeholder="선택해주세요"
+                        {...field}
+                    />
+                )}
+            />
 
-      <Input
-          label="제목"
-          {...register("title")}
-          error={!!errors.title}
-      />
+            <Input
+                label="제목"
+                {...register("title")}
+                error={!!errors.title}
+            />
 
-      <TextArea
-          label="내용"
-          {...register("body")}
-          error={!!errors.body}
-      />
+            <TextArea
+                label="내용"
+                {...register("body")}
+                error={!!errors.body}
+            />
 
-      <Input
-          label="태그 (쉼표로 구분)"
-          {...register("tags")}
-          placeholder="예: React, Next.js, TypeScript"
-      />
+            <Input
+                label="태그 (쉼표로 구분)"
+                {...register("tags")}
+                placeholder="예: React, Next.js, TypeScript"
+            />
 
-      <Box className="flex gap-2 justify-end">
-        <Button
-            variant="outlined"
-            onClick={() => router.back()}
-            type="button"
-        >
-          취소
-        </Button>
-        <Button variant="contained" type="submit" loading={isPending}>
-          {mode === "edit" ? "수정" : "작성"}
-        </Button>
-      </Box>
-    </Box>
+            <div className="flex gap-3 justify-end">
+                <Button
+                    variant="outlined"
+                    onClick={() => router.back()}
+                    type="button"
+                >
+                    취소
+                </Button>
+                <Button variant="contained" type="submit" loading={isPending}>
+                    {mode === "edit" ? "수정" : "작성"}
+                </Button>
+            </div>
+        </form>
     );
-}
+};

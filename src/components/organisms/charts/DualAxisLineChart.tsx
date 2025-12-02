@@ -154,15 +154,15 @@ export function DualAxisLineChart({
                 const secondaryVal = team.secondaryData[dataPointIndex];
 
                 return `
-          <div style="padding: 10px; background: #fff; border: 1px solid ${colors[teamIndex]}; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-            <div style="font-weight: 600; color: ${colors[teamIndex]}; margin-bottom: 6px;">${team.name}</div>
-            <div style="font-size: 12px; color: #666;">
-              <div>${xAxisTitle}: <strong>${xValue}</strong></div>
-              <div>● ${primaryLabel}: <strong>${primaryVal}</strong></div>
-              <div>■ ${secondaryLabel}: <strong>${secondaryVal}</strong></div>
-            </div>
-          </div>
-        `;
+                  <div style="padding: 10px; background: #fff; border: 1px solid ${colors[teamIndex]}; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    <div style="font-weight: 600; color: ${colors[teamIndex]}; margin-bottom: 6px;">${team.name}</div>
+                    <div style="font-size: 12px; color: #666;">
+                      <div>${xAxisTitle}: <strong>${xValue}</strong></div>
+                      <div>● ${primaryLabel}: <strong>${primaryVal}</strong></div>
+                      <div>■ ${secondaryLabel}: <strong>${secondaryVal}</strong></div>
+                    </div>
+                  </div>
+                `;
             },
         },
     };

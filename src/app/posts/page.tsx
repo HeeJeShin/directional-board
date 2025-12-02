@@ -1,18 +1,33 @@
 "use client";
 
 import { useState } from "react";
-import { Box, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
-import { withAuth } from "@/components/hoc/withAuth";
-import { SearchBar } from "@/components/molecules/SearchBar";
-import { CategoryFilter } from "@/components/molecules/CategoryFilter";
-import { SortSelect } from "@/components/molecules/SortSelect";
-import { PostTable } from "@/components/organisms/PostTable";
-import { Button } from "@/components/atoms/Button";
 import { usePosts } from "@/hooks/usePosts";
 import { CategoryType, SortFieldType, SortOrderType, PostType } from "@/types/post.types";
+import { COLORS } from "@/styles/theme";
+import { PostTable } from "@/components/organisms/post/PostTable";
+import { withAuth } from "@/components/hoc/withAuth";
+import { Button } from "@/components/atoms/Button";
+import { Select } from "@/components/atoms/Select";
+import {SearchBar} from "@/components/atoms/SearchBar";
+import {CategoryTabs} from "@/components/molecules/CategoryTabs";
 
-function PostsPage() {
+
+const categories = [
+    { value: "ALL", label: "ALL" },
+    { value: "NOTICE", label: "NOTICE" },
+    { value: "QNA", label: "Q&A" },
+    { value: "FREE", label: "FREE" },
+];
+
+const sortOptions = [
+    { value: "createdAt-desc", label: "최신순" },
+    { value: "createdAt-asc", label: "오래된순" },
+    { value: "title-asc", label: "제목 오름차순" },
+    { value: "title-desc", label: "제목 내림차순" },
+];
+
+const PostsPage = () => {
     const router = useRouter();
     const [search, setSearch] = useState("");
     const [category, setCategory] = useState<CategoryType | "ALL">("ALL");
@@ -38,31 +53,72 @@ function PostsPage() {
         router.push(`/posts/${post.id}`);
     };
 
-    const handleSortChange = (field: SortFieldType, order: SortOrderType) => {
+    const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const [field, order] = e.target.value.split("-") as [SortFieldType, SortOrderType];
         setSortField(field);
         setSortOrder(order);
     };
 
+    const handleCategoryChange = (value: string) => {
+        setCategory(value as CategoryType | "ALL");
+    };
+
     return (
-        <Box className="p-8 max-w-5xl mx-auto">
-          <Box className="flex justify-between items-center mb-6">
-            <Typography variant="h5" className="font-bold">
-              게시판
-            </Typography>
-            <Button variant="contained" onClick={() => router.push("/posts/new")}>
-              글쓰기
-            </Button>
-          </Box>
-            {/* 필터 영역 */}
-          <Box className="flex flex-wrap gap-4 mb-4">
-                <CategoryFilter value={category} onChange={setCategory} />
-                <SortSelect
-                    sortField={sortField}
-                    sortOrder={sortOrder}
-                    onSortChange={handleSortChange}
+        <div className="p-8 max-w-5xl mx-auto">
+            {/* 상단: 제목 + 검색바 */}
+            <div className="flex justify-between items-center mb-6">
+                <h1
+                    className="text-2xl font-bold"
+                    style={{ color: COLORS.text }}
+                >
+                    게시판
+                </h1>
+                <SearchBar
+                    onSearch={setSearch}
+                    placeholder="검색해보세요."
                 />
-                <SearchBar onSearch={setSearch} placeholder="제목/본문 검색" />
-           </Box>
+            </div>
+
+            {/* 카테고리 탭 */}
+            <CategoryTabs
+                tabs={categories}
+                value={category}
+                onChange={handleCategoryChange}
+            />
+
+            {/* 컨트롤 바: 글쓰기 + 정렬 */}
+            <div className="flex justify-between items-center my-4">
+                <Button
+                    variant="outlined"
+                    size="md"
+                    startIcon={
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={2}
+                            stroke="currentColor"
+                            className="w-4 h-4"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
+                            />
+                        </svg>
+                    }
+                    onClick={() => router.push("/posts/new")}
+                >
+                    글쓰기
+                </Button>
+
+                <Select
+                    options={sortOptions}
+                    value={`${sortField}-${sortOrder}`}
+                    onChange={handleSortChange}
+                />
+            </div>
+
             {/* 테이블 */}
             <PostTable
                 posts={posts}
@@ -72,8 +128,8 @@ function PostsPage() {
                 isFetchingNextPage={isFetchingNextPage}
                 onRowClick={handleRowClick}
             />
-        </Box>
+        </div>
     );
-}
+};
 
 export default withAuth(PostsPage);

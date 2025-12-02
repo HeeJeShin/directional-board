@@ -1,10 +1,9 @@
-import { Chip, ChipProps } from "@mui/material";
 import { CategoryType } from "@/types/post.types";
 
-const categoryColors: Record<CategoryType, ChipProps["color"]> = {
-    NOTICE: "error",
-    QNA: "primary",
-    FREE: "success",
+const categoryStyles: Record<CategoryType, string> = {
+    NOTICE: "bg-red-100 text-red-700 border-red-300",
+    QNA: "bg-blue-100 text-blue-700 border-blue-300",
+    FREE: "bg-green-100 text-green-700 border-green-300",
 };
 
 const categoryLabels: Record<CategoryType, string> = {
@@ -19,10 +18,10 @@ interface TagProps {
 
 export function Tag({ category }: TagProps) {
     return (
-        <Chip
-            label={categoryLabels[category]}
-            color={categoryColors[category]}
-            size="small"
-        />
+        <span
+            className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border ${categoryStyles[category]}`}
+        >
+            {categoryLabels[category]}
+        </span>
     );
 }

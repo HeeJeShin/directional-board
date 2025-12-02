@@ -47,3 +47,8 @@ export interface PostListResponseType {
 export interface DeleteResponseType {
     deleted: number;
 }
+
+export interface MockPostListResponseType {
+    items: PostType[];
+    count: number;
+}
