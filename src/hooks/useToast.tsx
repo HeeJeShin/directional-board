@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, useCallback, ReactNode } from "react";
 import { Snackbar, Alert } from "@mui/material";
+import {COLORS} from "@/styles/theme";
 
 type ToastSeverity = "success" | "error" | "warning" | "info";
 
@@ -43,9 +44,9 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                 open={state.open}
                 autoHideDuration={3000}
                 onClose={hideToast}
-                anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
             >
-            <Alert onClose={hideToast} severity={state.severity} variant="filled">
+            <Alert onClose={hideToast} severity={state.severity} variant="filled"  sx={{ backgroundColor: COLORS.primary }}>
                 {state.message}
             </Alert>
             </Snackbar>

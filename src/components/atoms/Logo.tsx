@@ -24,7 +24,7 @@ export default function Logo({ size = 'medium' }: LogoPropsType) {
         letterSpacing: '-0.02em',
       }}
     >
-      Directional
+      Directional Board
     </Typography>
   );
 }

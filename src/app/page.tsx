@@ -4,8 +4,8 @@ import {LoginForm} from "@/components/organisms/LoginForm";
 
 export default function Home() {
   return (
-      <Box className="min-h-screen flex items-center justify-center p-4">
-          <LoginForm />
-        </Box>
+      <main className="flex flex-col items-center justify-start pt-32 min-h-screen">
+            <LoginForm />
+      </main>
   );
 }

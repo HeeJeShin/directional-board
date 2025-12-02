@@ -65,8 +65,8 @@ export function AreaChart({ title, categories, series }: AreaChartProps) {
 
     return (
         <Box>
-      <ChartColorPicker colors={colors} onChange={setColors} />
-      <ApexChart type="area" options={options} series={series} height={350} />
-    </Box>
+          <ChartColorPicker colors={colors} onChange={setColors} />
+          <ApexChart type="area" options={options} series={series} height={350} />
+        </Box>
     );
 }

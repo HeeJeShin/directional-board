@@ -15,16 +15,16 @@ export default function Loading() {
                 gap: 2,
             }}
         >
-      <CircularProgress
-          size={40}
-          sx={{ color: COLORS.primary }}
-      />
-      <Typography
-          variant="body2"
-          sx={{ color: COLORS.textSecondary }}
-      >
-        로딩 중...
-      </Typography>
+          <CircularProgress
+              size={40}
+              sx={{ color: COLORS.primary }}
+          />
+          <Typography
+              variant="body2"
+              sx={{ color: COLORS.textSecondary }}
+          >
+            로딩 중...
+          </Typography>
     </Box>
     );
 }

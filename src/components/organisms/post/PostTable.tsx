@@ -11,6 +11,8 @@ import {
 import { useInView } from "react-intersection-observer";
 import { PostType, CategoryType } from "@/types/post.types";
 import { COLORS } from "@/styles/theme";
+import { useMobile } from "@/hooks/useMobile";
+import { MobilePostCard } from "@/components/molecules/MobilePostCard";
 
 // 카테고리 스타일
 const categoryStyles: Record<CategoryType, { bg: string; text: string; border: string }> = {
@@ -103,6 +105,7 @@ export const PostTable = ({
     const { ref, inView } = useInView();
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
     const [columnSizing, setColumnSizing] = useState({});
+    const isMobile = useMobile();
 
     // 무한스크롤
     useEffect(() => {
@@ -143,7 +146,8 @@ export const PostTable = ({
                 accessorKey: "tags",
                 header: "태그",
                 size: 25,
-                enableResizing: false,
+                minSize: 15,
+                maxSize: 35,
                 cell: ({ getValue }) => <HashTags tags={getValue<string[]>()} />,
             },
             {
@@ -204,12 +208,41 @@ export const PostTable = ({
         );
     }
 
+    // 모바일 레이아웃
+    if (isMobile) {
+        return (
+            <div
+                className="rounded-xl border overflow-hidden"
+                style={{ borderColor: COLORS.borderLight }}
+            >
+                {posts.map((post) => (
+                    <MobilePostCard
+                        key={post.id}
+                        post={post}
+                        onClick={onRowClick ? () => onRowClick(post) : undefined}
+                    />
+                ))}
+
+                {/* 무한스크롤 트리거 */}
+                <div ref={ref} className="flex justify-center p-4">
+                    {isFetchingNextPage && (
+                        <div
+                            className="animate-spin rounded-full h-6 w-6 border-b-2"
+                            style={{ borderColor: COLORS.primary }}
+                        />
+                    )}
+                </div>
+            </div>
+        );
+    }
+
+    // 데스크탑 레이아웃
     return (
         <div className="space-y-3">
             {/* 컬럼 숨김/보임 컨트롤 */}
             <div
                 className="flex items-center gap-4 p-3 rounded-lg border"
-                style={{ borderColor: COLORS.white }}
+                style={{ borderColor: COLORS.borderLight }}
             >
                 <span
                     className="text-sm font-medium"
@@ -217,7 +250,7 @@ export const PostTable = ({
                 >
                     필터:
                 </span>
-                <div className="flex gap-3">
+                <div className="flex gap-3 flex-wrap">
                     {table.getAllLeafColumns().map((column) => (
                         <label
                             key={column.id}
@@ -338,7 +371,7 @@ export const PostTable = ({
                     </tbody>
                 </table>
 
-                {/* 무한스크롤 트리거 (테이블 컨테이너 내부) */}
+                {/* 무한스크롤 트리거 */}
                 <div ref={ref} className="flex justify-center p-4">
                     {isFetchingNextPage && (
                         <div

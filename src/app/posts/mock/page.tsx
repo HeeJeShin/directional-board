@@ -184,4 +184,4 @@ const MockPostsPage = () => {
     );
 };
 
-export default withAuth(MockPostsPage);
+export default MockPostsPage;

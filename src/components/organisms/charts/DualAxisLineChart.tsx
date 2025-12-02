@@ -1,30 +1,31 @@
 "use client";
 
 import { useState } from "react";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { ApexChart } from "@/components/atoms/ChartWrapper";
 import { ApexOptions } from "apexcharts";
 import { CHART_COLORS } from "@/styles/theme";
 import { ChartColorPicker } from "./ChartColorPicker";
+import { useMobile } from "@/hooks/useMobile";
 
-interface TeamData {
+interface TeamDataType {
     name: string;
     xValues: number[];
     primaryData: number[];
     secondaryData: number[];
 }
 
-interface DualAxisLineChartProps {
+interface DualAxisLineChartPropsType {
     title: string;
     xAxisTitle: string;
     leftYAxisTitle: string;
     rightYAxisTitle: string;
     primaryLabel: string;
     secondaryLabel: string;
-    teams: TeamData[];
+    teams: TeamDataType[];
 }
 
-export function DualAxisLineChart({
+export const DualAxisLineChart = ({
                                       title,
                                       xAxisTitle,
                                       leftYAxisTitle,
@@ -32,12 +33,13 @@ export function DualAxisLineChart({
                                       primaryLabel,
                                       secondaryLabel,
                                       teams,
-                                  }: DualAxisLineChartProps) {
+                                  }: DualAxisLineChartPropsType) => {
+    const isMobile = useMobile();
     const [colors, setColors] = useState<string[]>(
         [...CHART_COLORS].slice(0, teams.length)
     );
 
-    // 시리즈 생성: 각 팀마다 2개 라인 (y축 인덱스 명시)
+    // 시리즈 생성: 각 팀마다 2개 라인
     const series = teams.flatMap((team) => [
         {
             name: `${team.name} - ${primaryLabel}`,
@@ -51,10 +53,7 @@ export function DualAxisLineChart({
         },
     ]);
 
-    // 같은 팀은 같은 색상
     const seriesColors = teams.flatMap((_, index) => [colors[index], colors[index]]);
-
-    // 실선(primary), 점선(secondary)
     const dashArray = teams.flatMap(() => [0, 5]);
 
     const options: ApexOptions = {
@@ -64,7 +63,7 @@ export function DualAxisLineChart({
             zoom: { enabled: true },
         },
         title: {
-            text: title,
+            text: isMobile ? "" : title, // 모바일에서는 외부 Typography로 표시
             align: "center",
         },
         colors: seriesColors,
@@ -78,7 +77,6 @@ export function DualAxisLineChart({
             strokeWidth: 2,
             strokeColors: "#fff",
             discrete: teams.flatMap((team, teamIndex) => [
-                // Primary (원형)
                 ...team.xValues.map((_, i) => ({
                     seriesIndex: teamIndex * 2,
                     dataPointIndex: i,
@@ -87,7 +85,6 @@ export function DualAxisLineChart({
                     size: 6,
                     shape: "circle" as const,
                 })),
-                // Secondary (사각형)
                 ...team.xValues.map((_, i) => ({
                     seriesIndex: teamIndex * 2 + 1,
                     dataPointIndex: i,
@@ -170,22 +167,33 @@ export function DualAxisLineChart({
     return (
         <Box
             sx={{
-                '& .apexcharts-legend': {
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    justifyContent: 'center',
+                "& .apexcharts-legend": {
+                    display: "flex",
+                    flexWrap: "wrap",
+                    justifyContent: "center",
                 },
-                '& .apexcharts-legend-group': {
-                    display: 'contents', // 그룹 구조 무시
+                "& .apexcharts-legend-group": {
+                    display: "contents",
                 },
-                '& .apexcharts-legend-series': {
-                    width: '33%',
-                    justifyContent: 'center',
+                "& .apexcharts-legend-series": {
+                    width: "33%",
+                    justifyContent: "center",
                 },
             }}
         >
+            {/* 모바일: 제목을 차트 외부 상단에 배치 */}
+            {isMobile && (
+                <Typography
+                    variant="subtitle1"
+                    fontWeight={600}
+                    textAlign="center"
+                    mb={1}
+                >
+                    {title}
+                </Typography>
+            )}
             <ChartColorPicker colors={colors} onChange={setColors} />
             <ApexChart type="line" options={options} series={series} height={450} />
         </Box>
     );
-}
+};
