@@ -12,8 +12,8 @@
 
 ```bash
 pnpm install
-pnpm dev      # 개발 서버 (http://localhost:3000)
-pnpm build    # 프로덕션 빌드
+pnpm dev (http://localhost:3000)
+
 ```
 
 `.env.local` 파일:
