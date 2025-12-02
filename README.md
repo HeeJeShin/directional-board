@@ -21,12 +21,7 @@ pnpm dev (http://localhost:3000)
 NEXT_PUBLIC_API_BASE_URL=https://fe-hiring-rest-api.vercel.app
 ```
 
-## 테스트 계정
 
-```
-Email: heeheehee.hj@gmail.com
-Password: B2iD4kF6L8
-```
 
 ---
 
@@ -36,7 +31,7 @@ Password: B2iD4kF6L8
 |------|------|------|
 | **내 게시물 보기** | `/posts` | 로그인 후 본인 게시물 CRUD (작성/수정/삭제) |
 | **차트** | `/charts` | 다양한 차트 시각화 (바/도넛/스택/멀티라인) |
-| **게시판(목업)** | `/posts/mock` | 가상 데이터 무한스크롤 테스트용 ⚠️ |
+| **게시판(목업)** | `/posts/mock` | 가상 데이터 무한스크롤 확인용 ⚠️ |
 
 
 
